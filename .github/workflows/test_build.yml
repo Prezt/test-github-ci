@@ -1,21 +1,16 @@
-name: Build test
+name: Docker Image CI
 
-on: 
-  push: 
+on:
+  push:
   pull_request:
 
 jobs:
-  test-ci:
-    runs-on: ubuntu-20.04
 
-    strategy:
-      matrix:
-        node-version: [16.x, 18.x]
+  build:
 
-      steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{matrix.node-version}}
-        uses: actions/hello-nest@v2
-        with:
-          node-version: ${{matrix.node-version}}
-      - run: npm run test 
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag hello-nest:$(date +%s)
